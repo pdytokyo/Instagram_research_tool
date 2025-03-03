@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram リサーチツール</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-center text-pink-600">
+                <i class="fab fa-instagram mr-2"></i>Instagram リサーチツール
+            </h1>
+            <p class="text-center text-gray-600 mt-2">リール動画を効率的に調査</p>
+            <div class="text-center mt-2">
+                <button id="showGuideButton" class="text-sm text-pink-600 hover:text-pink-800">
+                    <i class="fas fa-question-circle mr-1"></i>使い方ガイド
+                </button>
+            </div>
+        </header>
+
+        <!-- ガイドセクション -->
+        <div id="guideSection" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Instagram リサーチツール - 使用ガイド</h3>
+                <button id="closeGuideButton" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-6">
+                <section>
+                    <h4 class="text-lg font-semibold mb-2">概要</h4>
+                    <p>Instagram リサーチツールは、Instagramリール動画を効率的に検索・分析するためのウェブアプリケーションです。ハッシュタグで検索し、いいね数、推定再生数、エンゲージメント率などの指標でリール動画を評価できます。</p>
+                </section>
+                
+                <section>
+                    <h4 class="text-lg font-semibold mb-2">前提条件</h4>
+                    <p>このツールを使用するには以下が必要です：</p>
+                    <ul class="list-disc ml-6 mt-2">
+                        <li>Instagram Graph API のアクセストークン</li>
+                        <li>Instagram ユーザーID</li>
+                        <li>結果保存用の Google スプレッドシート</li>
+                        <li>Google Apps Script のデプロイURL</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h4 class="text-lg font-semibold mb-2">セットアップ手順</h4>
+                    
+                    <div class="mb-4">
+                        <h5 class="font-medium">1. Instagram Graph API の設定</h5>
+                        <ol class="list-decimal ml-6 mt-1">
+                            <li><a href="https://developers.facebook.com/" target="_blank" class="text-pink-600 hover:underline">Facebook Developer</a> にアクセスし、アカウントを作成</li>
+                            <li>アプリを作成し、Instagram Basic Display を追加</li>
+                            <li>OAuth設定とアプリ検証を完了</li>
+                            <li>アクセストークンとユーザーIDを取得</li>
+                        </ol>
+                        <p class="text-sm mt-1">詳細な手順については、<a href="https://developers.facebook.com/docs/instagram-basic-display-api/getting-started" target="_blank" class="text-pink-600 hover:underline">Meta for Developers</a> の公式ドキュメントを参照してください。</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5 class="font-medium">2. Google スプレッドシートの準備</h5>
+                        <ol class="list-decimal ml-6 mt-1">
+                            <li><a href="https://drive.google.com/" target="_blank" class="text-pink-600 hover:underline">Google Drive</a> で新しいスプレッドシートを作成</li>
+                            <li>スプレッドシートのURLからIDを取得</li>
+                        </ol>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-medium">3. Google Apps Script の設定</h5>
+                        <ol class="list-decimal ml-6 mt-1">
+                            <li><a href="https://script.google.com/" target="_blank" class="text-pink-600 hover:underline">Google Apps Script</a> にアクセス</li>
+                            <li>新しいプロジェクトを作成</li>
+                            <li>デフォルトのコードを削除し、ツールの設定画面に表示されるコードを貼り付け</li>
+                            <li>「デプロイ」→「新しいデプロイ」→「ウェブアプリ」を選択</li>
+                            <li>必要な設定を行い、「デプロイ」ボタンをクリック</li>
+                            <li>デプロイされたウェブアプリのURLをコピー</li>
+                        </ol>
+                    </div>
+                </section>
+                
+                <section>
+                    <h4 class="text-lg font-semibold mb-2">ツールの使い方</h4>
+                    
+                    <div class="mb-4">
+                        <h5 class="font-medium">初期設定</h5>
+                        <ol class="list-decimal ml-6 mt-1">
+                            <li>設定セクションに以下の情報を入力：
+                                <ul class="list-disc ml-6">
+                                    <li>Instagram アクセストークン</li>
+                                    <li>Instagram ユーザーID</li>
+                                    <li>Google スプレッドシートID</li>
+                                    <li>Google Apps Script URL</li>
+                                </ul>
+                            </li>
+                            <li>「設定を保存」ボタンをクリック</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5 class="font-medium">リール動画を検索する</h5>
+                        <ol class="list-decimal ml-6 mt-1">
+                            <li>検索ボックスにハッシュタグを入力（「#」は不要）</li>
+                            <li>必要に応じてフィルターを設定</li>
+                            <li>「検索」ボタンをクリック</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5 class="font-medium">検索結果の見方</h5>
+                        <p class="ml-6">検索結果には以下の情報が表示されます：</p>
+                        <ul class="list-disc ml-10 mt-1">
+                            <li>サムネイル画像</li>
+                            <li>投稿日時</li>
+                            <li>ユーザー名とフォロワー数</li>
+                            <li>いいね数</li>
+                            <li>推定再生数（※実際の値ではなく推定値です）</li>
+                            <li>いいね率と再生率</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h5 class="font-medium">結果を保存する</h5>
+                        <ol class="list-decimal ml-6 mt-1">
+                            <li>検索結果ページの「スプレッドシートに保存」ボタンをクリック</li>
+                            <li>指定した Google スプレッドシートに検索結果が保存されます</li>
+                        </ol>
+                    </div>
+                </section>
+                
+                <section>
+                    <h4 class="text-lg font-semibold mb-2">注意点</h4>
+                    <ul class="list-disc ml-6">
+                        <li><strong>再生数は推定値です</strong>：Instagram APIでは他アカウントの再生数を取得できないため、いいね数とフォロワー数を基に推定しています</li>
+                        <li><strong>API制限</strong>：Instagram APIには1時間あたりのリクエスト数に制限があります</li>
+                        <li><strong>ログイン済みユーザー向け</strong>：このツールはGraph APIアクセス権を持つユーザー向けです</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h4 class="text-lg font-semibold mb-2">トラブルシューティング</h4>
+                    <div class="space-y-2">
+                        <div>
+                            <p class="font-medium">検索結果が表示されない</p>
+                            <ul class="list-disc ml-6">
+                                <li>アクセストークンが有効か確認してください</li>
+                                <li>ハッシュタグのスペルを確認してください</li>
+                                <li>そのハッシュタグのリール動画が存在するか確認してください</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <p class="font-medium">スプレッドシートへのエクスポートが失敗する</p>
+                            <ul class="list-disc ml-6">
+                                <li>スプレッドシートIDが正しいか確認してください</li>
+                                <li>Google Apps ScriptのURLが正しいか確認してください</li>
+                                <li>スプレッドシートへのアクセス権があるか確認してください</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <p class="font-medium">APIエラー</p>
+                            <ul class="list-disc ml-6">
+                                <li>アクセストークンが有効期限切れでないか確認してください</li>
+                                <li>API使用制限に達していないか確認してください</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- セットアップセクション -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8" id="setupSection">
+            <h3 class="text-xl font-bold mb-4">📝 設定</h3>
+            
+            <div class="mb-4">
+                <label for="accessToken" class="block text-gray-700 font-medium mb-2">Instagram アクセストークン</label>
+                <input type="password" id="accessToken" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500" 
+                       placeholder="IGQWRPZADJuNTZA5MTBvWVJBY...">
+                <p class="text-xs text-gray-500 mt-1">
+                    <a href="https://developers.facebook.com/docs/instagram-basic-display-api/getting-started" target="_blank" class="text-pink-600 hover:underline">Meta for Developers</a>からアクセストークンを取得できます
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <label for="userId" class="block text-gray-700 font-medium mb-2">Instagram ユーザーID</label>
+                <input type="text" id="userId" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500" 
+                       placeholder="17841405793187218">
+            </div>
+
+            <div class="mb-4">
+                <label for="sheetId" class="block text-gray-700 font-medium mb-2">Google スプレッドシートID</label>
+                <input type="text" id="sheetId" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500" 
+                       placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms">
+                <p class="text-xs text-gray-500 mt-1">
+                    スプレッドシートのURLから取得できます: https://docs.google.com/spreadsheets/d/<span class="font-bold">スプレッドシートID</span>/edit
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <label for="scriptUrl" class="block text-gray-700 font-medium mb-2">Google Apps Script URL</label>
+                <input type="text" id="scriptUrl" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500" 
+                       placeholder="https://script.google.com/macros/s/...">
+            </div>
+            
+            <div class="text-center">
+                <button id="saveSettingsButton" class="bg-pink-600 hover:bg-pink-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                    <i class="fas fa-save mr-2"></i>設定を保存
+                </button>
+            </div>
+
+            <div class="mt-6">
+                <div class="border-t border-gray-200 pt-4">
+                    <h4 class="font-bold text-lg mb-2">Google Apps Script コード</h4>
+                    <p class="text-sm text-gray-600 mb-2">以下のコードをGoogle Apps Scriptに貼り付けてデプロイしてください：</p>
+                    <div class="bg-gray-100 p-3 rounded-lg text-sm relative">
+                        <div class="overflow-y-auto h-40 mb-2">
+                            <pre class="text-xs"><code id="gasCodePreview">// コードがここに表示されます...</code></pre>
+                        </div>
+                        <button id="copyGASButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                            <i class="fas fa-copy mr-2"></i>コードをコピー
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 検索セクション -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8" id="searchSection">
+            <label for="searchQuery" class="block text-gray-700 font-medium mb-2">ハッシュタグ検索</label>
+            <div class="flex">
+                <span class="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">
+                    #
+                </span>
+                <input type="text" id="searchQuery" class="w-full px-4 py-2 border border-l-0 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="トレンドハッシュタグを入力...">
+            </div>
+            
+            <!-- 🔽 フィルター -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label for="sortBy" class="block text-gray-700 font-medium">並び順</label>
+                    <select id="sortBy" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="recent">新着順</option>
+                        <option value="likeCount">いいね数順</option>
+                        <option value="estimatedViews">推定再生回数順</option>
+                        <option value="engagementRate">エンゲージメント率順</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="timeFrame" class="block text-gray-700 font-medium">期間</label>
+                    <select id="timeFrame" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="day">24時間以内</option>
+                        <option value="week">1週間以内</option>
+                        <option value="month">1ヶ月以内</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 🔽 エンゲージメントフィルター -->
+            <div class="mt-4">
+                <input type="checkbox" id="engagementFilter" class="mr-2">
+                <label for="engagementFilter" class="text-gray-700">いいね数がフォロワー数の3%以上の投稿のみ表示</label>
+            </div>
+
+            <div class="text-center mt-4">
+                <button id="searchButton" class="bg-pink-600 hover:bg-pink-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                    <i class="fas fa-search mr-2"></i>検索
+                </button>
+            </div>
+        </div>
+
+        <!-- 検索結果 -->
+        <div id="resultsArea" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">検索結果</h2>
+                <div>
+                    <span class="text-xs text-gray-500 italic mr-2">※再生回数は推定値です</span>
+                    <button id="exportButton" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                        <i class="fas fa-file-export mr-2"></i>スプレッドシートに保存
+                    </button>
+                </div>
+            </div>
+            <div id="results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 検索結果がここに追加される -->
+            </div>
+        </div>
+
+        <!-- 設定情報 -->
+        <div class="mt-8 text-center text-gray-600 text-sm">
+            <button id="showSettingsButton" class="text-pink-600 hover:text-pink-800">
+                <i class="fas fa-cog mr-1"></i>設定を変更
+            </button>
+        </div>
+    </div>
+
+    <!-- ✅ `script.js` を読み込む -->
+    <script src="script.js"></script>
+</body>
+</html>
